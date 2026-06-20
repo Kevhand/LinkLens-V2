@@ -263,6 +263,7 @@ Create a `.env` file in the project root directory and add the required API keys
 ```env
 VIRUSTOTAL_API_KEY=your_virustotal_api_key
 URLHAUS_API_KEY=your_urlhaus_api_key
+DJANGO_SECRET_KEY=your_django_secret_key
 ```
 
 ### Apply Database Migrations
