@@ -197,7 +197,7 @@
                 <span class="message-sender">
                     {% if message.role == 'user' %}Analyst Prompt{% else %}System Response{% endif %}
                 </span>
-                <p>{{ message.content }}</p>
+                <p>{{ message.content|linebreaksbr }}</p>
             </div>
         {% empty %}
             <div class="empty-history">

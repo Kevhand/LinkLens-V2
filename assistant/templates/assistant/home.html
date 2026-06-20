@@ -277,8 +277,8 @@
 
             <div class="action-group">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'new_chat' %}" class="btn btn-green">⚡ Start New Chat Node</a>
-                    <a href="{% url 'scan_url' %}" class="btn btn-blue">🔍 Scan Target URL</a>
+                    <a href="{% url 'new_chat' %}" class="btn btn-green">Start New Chat Node</a>
+                    <a href="{% url 'scan_url' %}" class="btn btn-blue">Scan Target URL</a>
                     <a href="{% url 'logout' %}" class="btn btn-logout">Terminate Session (Logout)</a>
                 {% else %}
                     <a href="{% url 'login' %}" class="btn btn-green">Authenticate (Login)</a>

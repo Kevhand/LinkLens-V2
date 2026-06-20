@@ -357,8 +357,9 @@ Planned improvements for future versions of LinkLens include:
 
 ![Safe URL Analysis](Screenshots/URL_Analysis_safe_url2.png)
 
+```
+Project Structure
 
-## Project Structure
 │   manage.py
 │   readme.md
 │
@@ -417,6 +418,7 @@ Planned improvements for future versions of LinkLens include:
         URL_Analysis_unsafe_followup_response.png
         URL_Analysis_Unsafe_with_followup_question.png
 
+```
 
 ## Knowledge Base
 

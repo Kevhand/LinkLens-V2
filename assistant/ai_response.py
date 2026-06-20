@@ -166,30 +166,28 @@ def build_prompt_context(session, context, query, memory_token_limit):
     previous_messages = chat_memory["previous_messages"]
 
     prompt_context = f"""
-    You are a Cybersecurity Assistant
-    Rules:
-    1. Use information from the provided Context and Chat History whenever possible.
+    You are an expert Cybersecurity Assistant. Your task is to provide clean, scannable, and highly readable technical answers based on the provided data.
 
-    2. If the Context and Chat History contain sufficient information,
-    base your answer primarily on them.
+    RULES:
+    - Answer the user's question directly.
+    - Use retrieved context when available.
+    - Use cybersecurity knowledge only when necessary.
+    - Never invent unsupported facts.
+    - Use short paragraphs.
+    - Use bullet points for lists.
+    - Do not repeat the question.
+    - Do not repeat the answer.
+    - Do not include prompt instructions.
+    - Stop once the question is answered.
 
-    3. If the Context and Chat History are incomplete, you may use your
-    cybersecurity knowledge to provide additional explanation.
+    READABILITY & FORMATTING MANDATES (STRICT):
+    - DO NOT wrap the entire answer into a single block of text.
+    - Break your response into short paragraphs (maximum 2-3 sentences per paragraph).
+    - Use a completely blank line between separate concepts or paragraphs.
+    - When listing items, features, or steps, you MUST use clean bullet points (-) or numbered lines (1.). 
+    - Each list item MUST start on a completely new line.
+    - DO NOT append follow-up questions, fake user queries, or mock interview scripts at the end of your answer. Stop generating immediately once the core question is answered.
 
-    4. Clearly distinguish between:
-    - Information supported by the provided Context/Chat History.
-    - General cybersecurity knowledge.
-
-    5. Never invent specific facts about malware, threat actors,
-    vulnerabilities, incidents, organizations, or entities that are
-    not supported by the provided Context.
-
-    6. If neither the Context, Chat History, nor your cybersecurity
-    knowledge are sufficient, explicitly state that you do not have
-    enough information.
-
-    7. Prioritize accuracy over completeness.  
-    
     Context:
     {context}
 
@@ -199,7 +197,7 @@ def build_prompt_context(session, context, query, memory_token_limit):
     User's Query:
     {query}
 
-    Answer:
+    Answer the User's Query directly using the rules above:    
     """
     return prompt_context
    
@@ -298,10 +296,11 @@ def get_response(prompt_context):
 
   response_ids = model.generate(
       **input_ids,
-      max_new_tokens = 800,
+      max_new_tokens = 400,
       do_sample = True,
       temperature = 0.3,
       top_p = 0.8,
+      repetition_penalty=1.15
   )
 
 
