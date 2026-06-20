@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkLens-V2 - Create Security Account</title>
+    <style>
+        /* Modern CSS Variables for Theme Management */
+        :root {
+            --bg-main: #0B0F19;
+            --bg-card: #151D30;
+            --border-color: #243354;
+            --text-primary: #E2E8F0;
+            --text-secondary: #94A3B8;
+            --accent-green: #10B981;
+            --accent-hover: #059669;
+            --error-red: #EF4444;
+            --error-bg: #2D1A22;
+            --success-bg: #132D24;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Container Card */
+        .auth-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 420px;
+            padding: 40px 32px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Typography */
+        .brand-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .brand-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .brand-title span {
+            color: var(--accent-green);
+        }
+
+        .brand-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+
+        /* Interactive Elements */
+        .btn-submit {
+            width: 100%;
+            background-color: var(--accent-green);
+            color: #000000;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* System Alerts */
+        .alert {
+            font-size: 0.9rem;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+
+        .alert-error {
+            background-color: var(--error-bg);
+            border: 1px solid var(--error-red);
+            color: #FCA5A5;
+        }
+
+        .alert-success {
+            background-color: var(--success-bg);
+            border: 1px solid var(--accent-green);
+            color: #A7F3D0;
+        }
+
+        .footer-link {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-link a {
+            color: var(--accent-green);
+            text-decoration: none;
+        }
+
+        .footer-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <div class="brand-header">
+            <h1 class="brand-title">LinkLens<span>-V2</span></h1>
+            <p class="brand-subtitle">Register</p>
+        </div>
+
+        {% if message %}
+            <div class="alert alert-success">
+                <strong>Status:</strong> {{ message }}
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div class="alert alert-error">
+                <strong>Alert:</strong> {{ error }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-input" placeholder="e.g., net_analyst" required autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email" class="form-input" placeholder="name@domain.com" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password1" class="form-input" placeholder="••••••••••••" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" name="password2" class="form-input" placeholder="••••••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Initialize Registration</button>
+        </form>
+
+        <div class="footer-link">
+            Already registered? <a href="#">Log In Here</a>
+        </div>
+    </div>
+
+</body>
+</html>

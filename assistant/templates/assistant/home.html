@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkLens-V2 - Home</title>
+    <style>
+        :root {
+            --bg-main: #0B0F19;
+            --bg-card: #151D30;
+            --border-color: #243354;
+            --text-primary: #E2E8F0;
+            --text-secondary: #94A3B8;
+            --accent-green: #10B981;
+            --accent-hover: #059669;
+            --accent-blue: #38BDF8;
+            --accent-blue-hover: #0EA5E9;
+            --error-red: #EF4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Top Panel Control Card */
+        .control-panel {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 28px 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .welcome-block {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+        }
+
+        .brand-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-title span {
+            color: var(--accent-green);
+        }
+
+        .user-status {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .user-status strong {
+            color: var(--text-primary);
+        }
+
+        .action-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+        .session-row {
+            display: flex;
+            align-items: center;
+        }
+
+        .feed-link {
+            flex: 1;
+        }
+
+        .delete-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #FCA5A5;
+            text-decoration: none;
+            padding: 8px 14px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-left: 1px solid var(--border-color);
+            transition: background-color 0.2s, color 0.2s;
+            margin-right: 4px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .delete-btn svg {
+            fill: currentColor;
+            width: 14px;
+            height: 14px;
+        }
+
+        .delete-btn:hover {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: var(--error-red);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.2s, transform 0.1s;
+            cursor: pointer;
+        }
+
+        .btn-green {
+            background-color: var(--accent-green);
+            color: #000000;
+        }
+
+        .btn-green:hover { background-color: var(--accent-hover); }
+
+        .btn-blue {
+            background-color: transparent;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .btn-blue:hover { 
+            background-color: rgba(56, 189, 248, 0.08); 
+        }
+
+        .btn-logout {
+            background-color: transparent;
+            border: 1px solid #334155;
+            color: var(--text-secondary);
+            margin-left: auto;
+        }
+
+        .btn-logout:hover {
+            border-color: var(--error-red);
+            color: var(--error-red);
+        }
+
+        .sessions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 24px;
+        }
+
+        @media(max-width: 768px) {
+            .sessions-grid { grid-template-columns: 1fr; }
+            .btn-logout { margin-left: 0; width: 100%; }
+        }
+
+        .session-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            height: 450px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header-title.intel { color: var(--accent-green); }
+        .card-header-title.scan { color: var(--accent-blue); }
+
+        .session-count {
+            font-family: monospace;
+            font-size: 0.85rem;
+            background-color: var(--bg-main);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: var(--text-secondary);
+        }
+
+        .feed-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-right: 4px;
+        }
+
+        /* Individual Session Row Items */
+        .feed-item {
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: border-color 0.2s, background-color 0.2s;
+            overflow: hidden;
+        }
+
+        .feed-item:hover {
+            background-color: #111A2E;
+        }
+
+        .feed-list.intel-list .feed-item:hover { border-color: var(--accent-green); }
+        .feed-list.scan-list .feed-item:hover { border-color: var(--accent-blue); }
+
+        .feed-link {
+            display: block;
+            padding: 14px 16px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+        }
+
+        .empty-feed-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-style: italic;
+            margin: auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <section class="control-panel">
+            <div class="welcome-block">
+                <h1 class="brand-title">LinkLens<span>-V2</span> Home</h1>
+                <div class="user-status">
+                    {% if user.is_authenticated %}
+                        Operator: <strong>{{ user.username }}</strong>
+                    {% else %}
+                        Status: <strong style="color: var(--error-red);">Unauthenticated</strong>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="action-group">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'new_chat' %}" class="btn btn-green">⚡ Start New Chat Node</a>
+                    <a href="{% url 'scan_url' %}" class="btn btn-blue">🔍 Scan Target URL</a>
+                    <a href="{% url 'logout' %}" class="btn btn-logout">Terminate Session (Logout)</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-green">Authenticate (Login)</a>
+                    <a href="{% url 'register' %}" class="btn btn-blue">Register New Node</a>
+                {% endif %}
+            </div>
+        </section>
+
+        {% if user.is_authenticated %}
+            <div class="sessions-grid">
+                
+                <article class="session-card">
+                    <h2 class="card-header-title intel">
+                        Active Intel Chats
+                        <span class="session-count">LOGS: {{ chat_sessions|length }}</span>
+                    </h2>
+                    <div class="feed-list intel-list">
+                        {% for session in chat_sessions %}
+                            <div class="feed-item">
+                                <a href="{% url 'chat_details' session_id=session.session_id %}" class="feed-link">
+                                    • {{ session.title|default:"Unnamed Analysis Session" }}
+                                </a>
+                                <a href="{% url 'delete_chat_session' session_id=session.session_id %}"
+                                    class="delete-btn"
+                                    onclick="return confirm('Are you sure you want to delete this chat session?');"
+                                >
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12z"/>
+                                    </svg>
+                                    Delete
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="empty-feed-text">No active investigation logs found.</p>
+                        {% endfor %}
+                    </div>
+                </article>
+
+                <article class="session-card">
+                    <h2 class="card-header-title scan">
+                        URL Scan History
+                        <span class="session-count">SCANS: {{ url_analysis_sessions|length }}</span>
+                    </h2>
+                    <div class="feed-list scan-list">
+                        {% for session in url_analysis_sessions %}
+                            <div class="feed-item">
+                                <a href="{% url 'chat_details' session_id=session.session_id %}" class="feed-link">
+                                    🌐 {{ session.title|default:"Target URL Analysis Pipeline" }}
+                                </a>
+                                <a href="{% url 'delete_chat_session' session_id=session.session_id %}"
+                                    class="delete-btn"
+                                    onclick="return confirm('Are you sure you want to delete this URL analysis session?');"
+                                >
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12z"/>
+                                    </svg>
+                                    Delete
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="empty-feed-text">No network target scans recorded.</p>
+                        {% endfor %}
+                    </div>
+                </article>
+
+            </div>
+        {% else %}
+            <section class="control-panel" style="text-align: center; padding: 48px;">
+                <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto; line-height: 1.6;">
+                    Security Protocol Active. LinkLens-V2 requires system deployment authentication parameters. Please initialize an administrative login session or register an operational analyst profile node to engage the AI Assistant.
+                </p>
+            </section>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

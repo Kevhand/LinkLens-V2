@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkLens-V2 - Chatroom</title>
+    <style>
+        :root {
+            --bg-main: #0B0F19;
+            --bg-card: #151D30;
+            --border-color: #243354;
+            --text-primary: #E2E8F0;
+            --text-secondary: #94A3B8;
+            --accent-green: #10B981;
+            --accent-hover: #059669;
+            --user-bubble: #1E293B;
+            --assistant-bubble: #15233C;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+
+        .terminal-header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .terminal-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .terminal-title span {
+            color: var(--accent-green);
+        }
+
+        .session-badge {
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-green);
+        }
+
+        .chat-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .message-wrapper {
+            display: flex;
+            flex-direction: column;
+            max-width: 75%;
+            width: fit-content;
+            padding: 16px;
+            border-radius: 12px;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .message-wrapper.user {
+            background-color: var(--user-bubble);
+            border: 1px solid #334155;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+
+        .message-wrapper.assistant {
+            background-color: var(--assistant-bubble);
+            border: 1px solid var(--border-color);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .message-sender {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .user .message-sender { color: #38BDF8; }
+        .assistant .message-sender { color: var(--accent-green); }
+
+        .empty-history {
+            text-align: center;
+            color: var(--text-secondary);
+            margin: auto;
+            font-size: 0.95rem;
+        }
+
+
+        .input-footer {
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 24px;
+            flex-shrink: 0;
+        }
+
+        .input-form {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .terminal-textarea {
+            flex-grow: 1;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            resize: none;
+            height: 52px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .terminal-textarea:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .btn-send {
+            background-color: var(--accent-green);
+            color: #000000;
+            border: none;
+            font-weight: 600;
+            padding: 0 24px;
+            height: 52px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn-send:hover {
+            background-color: var(--accent-hover);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="terminal-header">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <h1 class="terminal-title">LinkLens<span>-V2</span> Chatroom</h1>
+            <span class="session-badge">SID: {{ session_id|slice:":8" }}...</span>
+        </div>
+        <a href="{% url 'home' %}" class="nav-link">← Return Home</a>
+    </header>
+
+    <main class="chat-container" id="chatStream">
+        {% for message in messages %}
+            <div class="message-wrapper {{ message.role }}">
+                <span class="message-sender">
+                    {% if message.role == 'user' %}Analyst Prompt{% else %}System Response{% endif %}
+                </span>
+                <p>{{ message.content }}</p>
+            </div>
+        {% empty %}
+            <div class="empty-history">
+                <p>Console Idle. Enter a target query below to initiate threat analysis routing...</p>
+            </div>
+        {% endfor %}
+    </main>
+
+    <footer class="input-footer">
+        <form action="{% url 'send_message' %}" method="post" class="input-form">
+            {% csrf_token %}
+            <input type="hidden" name="session_id" value="{{ session_id }}">
+            
+            <textarea 
+                name="query" 
+                class="terminal-textarea" 
+                placeholder="Ask about malware behaviors, threat groups, mitigations..." 
+                required
+            ></textarea>
+            
+            <button type="submit" class="btn-send">Send</button>
+        </form>
+    </footer>
+
+    <script>
+
+        const stream = document.getElementById('chatStream');
+        stream.scrollTop = stream.scrollHeight;
+
+
+        document.querySelector('.terminal-textarea').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                this.form.submit();
+            }
+        });
+    </script>
+
+</body>
+</html>

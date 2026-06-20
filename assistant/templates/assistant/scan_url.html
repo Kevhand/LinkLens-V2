@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkLens-V2 - URL Scanner</title>
+    <style>
+        :root {
+            --bg-main: #0B0F19;
+            --bg-card: #151D30;
+            --border-color: #243354;
+            --text-primary: #E2E8F0;
+            --text-secondary: #94A3B8;
+            --accent-blue: #38BDF8;
+            --accent-hover: #0EA5E9;
+            --accent-green: #10B981;
+            --user-bubble: #1E293B;
+            --report-bg: #0F1626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .page-container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+
+        .header-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .title-text {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .title-text span {
+            color: var(--accent-blue);
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-blue);
+        }
+
+
+        .scan-wrapper-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .input-inline-form {
+            display: flex;
+            gap: 12px;
+        }
+
+        .url-input {
+            flex-grow: 1;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: monospace;
+            transition: border-color 0.2s;
+        }
+
+        .url-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+        }
+
+        .btn-action {
+            background-color: var(--accent-blue);
+            color: #000000;
+            border: none;
+            font-weight: 600;
+            padding: 0 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-action:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .report-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .report-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-blue);
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .meta-row {
+            background-color: var(--report-bg);
+            border-left: 4px solid var(--accent-blue);
+            padding: 14px 16px;
+            border-radius: 0 8px 8px 0;
+            font-family: monospace;
+            word-break: break-all;
+            font-size: 0.95rem;
+        }
+
+        .analysis-textbox {
+            background-color: var(--report-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #E2E8F0;
+            white-space: pre-wrap;
+        }
+
+   
+        .history-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .msg-bubble {
+            padding: 14px 18px;
+            border-radius: 10px;
+            max-width: 85%;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .msg-bubble.user {
+            background-color: var(--user-bubble);
+            border: 1px solid #334155;
+            align-self: flex-end;
+        }
+
+        .msg-bubble.assistant {
+            background-color: var(--report-bg);
+            border: 1px solid var(--border-color);
+            align-self: flex-start;
+        }
+
+        .role-indicator {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .user .role-indicator { color: var(--accent-blue); }
+        .assistant .role-indicator { color: var(--accent-green); }
+
+     
+        .followup-textarea {
+            width: 100%;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 0.95rem;
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+        }
+
+        .followup-textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-container">
+        
+        <header class="header-panel">
+            <h1 class="title-text">LinkLens<span>-V2</span> URL Scanner</h1>
+            <a href="{% url 'home' %}" class="nav-link">← Main Dashboard</a>
+        </header>
+
+        <section class="scan-wrapper-card">
+            <form action="{% url 'submit_url' %}" method="post" class="input-inline-form">
+                {% csrf_token %}
+                <input 
+                    type="text" 
+                    name="url_to_search" 
+                    class="url-input" 
+                    placeholder="Enter target destination URL (e.g., http://malicious-domain.com)" 
+                    value="{{ url_to_search|default:'' }}"
+                    required
+                >
+                <button type="submit" class="btn-action">Scan URL</button>
+            </form>
+        </section>
+
+        {% if messages %}
+            <section class="scan-wrapper-card" style="padding-top: 16px;">
+                <span style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.5px;">Investigation Thread Log</span>
+                <div class="history-container">
+                    {% for message in messages %}
+                        <div class="msg-bubble {{ message.role }}">
+                            <span class="role-indicator">{{ message.role }}</span>
+                            <p>{{ message.content }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
+        {% if response %}
+            <main class="report-section">
+                <h2 class="report-header">Analysis Assessment Report</h2>
+                
+                <div class="meta-row">
+                    <strong>TARGET_OBJECT:</strong> {{ url_to_search }}
+                </div>
+
+                <div class="analysis-textbox">
+                    {{ response }}
+                </div>
+
+                {% if session_id %}
+                    <div style="margin-top: 12px; border-top: 1px solid var(--border-color); padding-top: 24px;">
+                        <h3 class="report-header" style="font-size: 0.95rem; margin-bottom: 14px; border: none; padding: 0;">Query Threat Assistant regarding results:</h3>
+                        <form action="{% url 'url_followup_questions' session_id=session_id %}" method="post">
+                            {% csrf_token %}
+                            <textarea 
+                                name="query" 
+                                class="followup-textarea" 
+                                placeholder="Ask if any specific malware or advanced persistent groups are tied to this result..." 
+                                required
+                            ></textarea>
+                            <button type="submit" class="btn-action" style="width: 100%; padding: 14px 0;">Send Follow-Up Question</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </main>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
